@@ -87,67 +87,19 @@ export default {
         toggle: false,
         value: "",
       },
-      types: [
-        {
-          name: "Backlog",
-          slug: "backlog",
-          childs: [
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            "Curabitur congue massa ac pellentesque interdum.",
-            "Morbi ac orci sed ex elementum scelerisque non eget nulla.",
-            "Duis rutrum sapien at elit consequat, quis porttitor nulla venenatis.",
-            "Praesent id nisl id odio ornare auctor in eu nisi.",
-          ],
-        },
-        {
-          name: "Design",
-          slug: "design",
-          childs: [],
-        },
-        {
-          name: "Todo",
-          slug: "todo",
-          childs: [],
-        },
-        {
-          name: "Issues & Enhancement",
-          slug: "issues_enhancement",
-          childs: [
-            "Suspendisse sit amet leo ut elit fringilla rutrum.",
-            "Vivamus quis ligula sagittis, imperdiet mauris vel, auctor nisi.",
-            "Quisque eu orci vitae ex blandit lacinia.",
-            "Donec non lorem commodo, molestie risus ultrices, vehicula quam.",
-            "Ut ac ex eget velit dignissim aliquam.",
-            "Cras volutpat ipsum rhoncus tellus blandit suscipit a eu lectus.",
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-          ],
-        },
-        {
-          name: "Doing",
-          slug: "doing",
-          childs: [],
-        },
-        {
-          name: "Testing",
-          slug: "testing",
-          childs: [],
-        },
-        {
-          name: "Done",
-          slug: "done",
-          childs: [
-            "Morbi ornare odio id hendrerit placerat.",
-            "Etiam a massa non sem sagittis tempor eget ut dolor.",
-            "Donec commodo sem euismod risus eleifend luctus.",
-            "Etiam pretium odio at ligula placerat, id faucibus libero aliquam.",
-            "Aliquam eu quam sit amet mauris cursus molestie.",
-            "Mauris porttitor magna eget scelerisque fringilla.",
-            "Mauris a sapien sit amet nisi dapibus feugiat.",
-            "Proin imperdiet nibh non nibh fringilla, vel fermentum augue pulvinar.",
-          ],
-        },
-      ],
+      types: [],
     };
+  },
+
+  //
+  created() {
+    let sections = window.location.pathname.split("/");
+    let slug = sections.pop();
+    fetch(this.$api + "/" + slug)
+      .then((res) => res.json())
+      .then((res) => {
+        this.types = res.board;
+      });
   },
 
   mounted() {
@@ -161,6 +113,7 @@ export default {
         this.addEventListener();
       }, 0);
       this.reset();
+      this.update();
     },
 
     reset() {
@@ -193,6 +146,20 @@ export default {
       setTimeout(() => {
         this.addEventListener();
       }, 0);
+      this.update();
+    },
+
+    //
+    update() {
+      let sections = window.location.pathname.split("/");
+      let slug = sections.pop();
+      fetch(this.$api + "/" + slug, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.types),
+      });
     },
 
     addEventListener() {
