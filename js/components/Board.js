@@ -7,7 +7,7 @@ export default {
         <div class="col px-1" v-for="(type,index) in types" :key="index">
           <div class="card">
             <div class="card-header font-weight-bold pb-2">{{type.name}}</div>
-            <div class="card-body px-2 pt-0 pb-0 parent">
+            <div class="card-body px-2 pt-0 pb-0 parent" :data-slug="type.slug"  :data-name="type.name">
               <div
                 class="card mb-2 child"
                 v-for="(child, index) in type.childs"
@@ -99,11 +99,10 @@ export default {
       .then((res) => res.json())
       .then((res) => {
         this.types = res.board;
+      })
+      .then(() => {
+        this.addEventListener();
       });
-  },
-
-  mounted() {
-    this.addEventListener();
   },
 
   methods: {
@@ -111,9 +110,9 @@ export default {
       this.types[index].childs.push(this.card.value);
       setTimeout(() => {
         this.addEventListener();
+        this.update();
       }, 0);
       this.reset();
-      this.update();
     },
 
     reset() {
@@ -145,8 +144,8 @@ export default {
       this.addAnotherList.toggle = false;
       setTimeout(() => {
         this.addEventListener();
+        this.update();
       }, 0);
-      this.update();
     },
 
     //
@@ -158,9 +157,28 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(this.types),
+        body: JSON.stringify(this.updateOrder()),
       });
     },
+
+    updateOrder() {
+      const containers = document.querySelectorAll(".parent");
+      let types = [];
+      containers.forEach((container) => {
+        let type = {
+          name: container.dataset.name,
+          slug: container.dataset.slug,
+          childs: [],
+        };
+        let draggables = container.querySelectorAll(".child");
+        draggables.forEach((child) => {
+          type.childs.push(child.innerText);
+        });
+        types.push(type);
+      });
+      return types;
+    },
+    //
 
     addEventListener() {
       const draggables = document.querySelectorAll(".child");
@@ -171,9 +189,10 @@ export default {
           draggable.classList.add("active")
         );
 
-        draggable.addEventListener("dragend", () =>
-          draggable.classList.remove("active")
-        );
+        draggable.addEventListener("dragend", () => {
+          draggable.classList.remove("active");
+          this.update();
+        });
       });
 
       containers.forEach((container) => {
