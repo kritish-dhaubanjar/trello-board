@@ -79,6 +79,10 @@ export default {
 
   data() {
     return {
+      //
+      name: "",
+      slug: "",
+      //
       card: {
         active: "",
         value: "",
@@ -87,7 +91,22 @@ export default {
         toggle: false,
         value: "",
       },
-      types: [],
+      types: [
+        // {
+        //   name: "Discord",
+        //   slug: "discord",
+        //   childs: ["Hello World!"],
+        // },
+      ],
+      // Dicord Purpose
+      move: {
+        from: "",
+        to: "",
+        value: "",
+      },
+
+      timeout: null,
+      discordTimeout: null,
     };
   },
 
@@ -99,6 +118,7 @@ export default {
       .then((res) => res.json())
       .then((res) => {
         this.types = res.board;
+        (this.name = res.name), (this.slug = res.slug);
       })
       .then(() => {
         this.addEventListener();
@@ -108,6 +128,14 @@ export default {
   methods: {
     add(index) {
       this.types[index].childs.push(this.card.value);
+
+      //DISCORD
+      this.discord("ADD_TO_LIST", {
+        list: this.types[index].name,
+        value: this.card.value,
+      });
+      //
+
       setTimeout(() => {
         this.addEventListener();
         this.update();
@@ -121,7 +149,7 @@ export default {
     },
 
     show(card) {
-      console.log(card);
+      // console.log(card);
     },
 
     addAnotherListToTypes() {
@@ -142,6 +170,7 @@ export default {
       });
       this.addAnotherList.value = "";
       this.addAnotherList.toggle = false;
+
       setTimeout(() => {
         this.addEventListener();
         this.update();
@@ -150,15 +179,21 @@ export default {
 
     //
     update() {
-      let sections = window.location.pathname.split("/");
-      let slug = sections.pop();
-      fetch(this.$api + "/" + slug, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(this.updateOrder()),
-      });
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+      //
+      this.timeout = setTimeout(() => {
+        let sections = window.location.pathname.split("/");
+        let slug = sections.pop();
+        fetch(this.$api + "/" + slug, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(this.updateOrder()),
+        });
+      }, 250);
     },
 
     updateOrder() {
@@ -185,9 +220,12 @@ export default {
       const containers = document.querySelectorAll(".parent");
 
       draggables.forEach((draggable) => {
-        draggable.addEventListener("dragstart", () =>
-          draggable.classList.add("active")
-        );
+        draggable.addEventListener("dragstart", () => {
+          draggable.classList.add("active");
+          // DISCORD //
+          this.move.from = draggable.parentElement.dataset.name;
+          this.move.value = draggable.innerText;
+        });
 
         draggable.addEventListener("dragend", () => {
           draggable.classList.remove("active");
@@ -202,6 +240,18 @@ export default {
           const draggable = document.querySelector(".active");
           if (!afterElement) container.appendChild(draggable);
           else container.insertBefore(draggable, afterElement);
+        });
+      });
+
+      containers.forEach((container) => {
+        container.addEventListener("drop", () => {
+          // DISCORD //
+          this.move.to = container.dataset.name;
+          this.discord("MOVED_FROM_TO", {
+            from: this.move.from,
+            to: this.move.to,
+            value: this.move.value,
+          });
         });
       });
     },
@@ -219,6 +269,47 @@ export default {
         },
         { offset: Number.NEGATIVE_INFINITY }
       ).element;
+    },
+
+    //discord
+    discord(type, payload) {
+      if (this.discordTimeout) {
+        clearTimeout(this.discordTimeout);
+      }
+
+      this.discordTimeout = setTimeout(() => {
+        let content = "";
+        if (type == "ADD_TO_LIST") {
+          content = `Added \`${payload.value}\` to \`${payload.list}\`.`;
+        } else if (type == "MOVED_FROM_TO") {
+          content = `Moved \`${payload.value}\` from \`${payload.from}\` to \`${payload.to}\`.`;
+        }
+
+        let body = {
+          content: content,
+          embeds: [
+            {
+              title: this.name,
+              url: `https://developers.gimmickbox.com.np/trello/${this.slug}`,
+              color: 7506394,
+              footer: {
+                text: "Updated @",
+              },
+              timestamp: "2020-10-01T18:15:00.000Z",
+            },
+          ],
+        };
+        fetch(
+          "https://discordapp.com/api/webhooks/764862296350392341/urnG0_4Wwg-imv2R1-78cmdgb7ZctMNnOEcDFeySBgs91knfz840xQqkip67e8vFm-6o",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          }
+        );
+      }, 500);
     },
   },
 
