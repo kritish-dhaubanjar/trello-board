@@ -141,3 +141,14 @@ textarea {
     opacity: 0.75;
   }
 }
+
+// 
+#clipboard{
+  opacity: 0;
+}
+
+.toast{
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+}

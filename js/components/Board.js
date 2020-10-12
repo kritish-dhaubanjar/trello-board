@@ -7,7 +7,11 @@ export default {
         <div class="col px-1" v-for="(type,index) in types" :key="index">
           <div class="card">
             <div class="card-header font-weight-bold pb-2">{{type.name}}</div>
-            <div class="card-body px-2 pt-0 pb-0 parent" :data-slug="type.slug"  :data-name="type.name">
+            <div
+              class="card-body px-2 pt-0 pb-0 parent"
+              :data-slug="type.slug"
+              :data-name="type.name"
+            >
               <div
                 class="card mb-2 child"
                 v-for="(child, index) in type.childs"
@@ -52,7 +56,13 @@ export default {
 
         <div class="col px-1">
           <div class="card add-another-list">
-            <button class="btn btn-dark translucent btn-block" v-if="!addAnotherList.toggle" @click="addAnotherList.toggle = true">+ Add another list</button>
+            <button
+              class="btn btn-dark translucent btn-block"
+              v-if="!addAnotherList.toggle"
+              @click="addAnotherList.toggle = true"
+            >
+              + Add another list
+            </button>
             <div class="card-body p-2 actions" v-else>
               <textarea
                 class="form-control mb-2"
@@ -67,11 +77,29 @@ export default {
               >
                 Add Card
               </button>
-              <span aria-hidden="true" class="close" @click="addAnotherList.toggle = false"
+              <span
+                aria-hidden="true"
+                class="close"
+                @click="addAnotherList.toggle = false"
                 >&times;</span
               >
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- textarea -->
+      <textarea id="clipboard" class="position-fixed"></textarea>
+
+      <div
+        id="toast"
+        class="toast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header">
+          <strong class="mr-auto">Copied to clipboard!</strong>
         </div>
       </div>
     </div>
@@ -149,7 +177,12 @@ export default {
     },
 
     show(card) {
-      // console.log(card);
+      let textarea = document.getElementById("clipboard");
+      textarea.innerText = card;
+      textarea.select();
+      textarea.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      $("#toast").toast("show");
     },
 
     addAnotherListToTypes() {
