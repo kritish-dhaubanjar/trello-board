@@ -1,0 +1,101 @@
+* {
+  font-size: 14px;
+  font-family: "Roboto", sans-serif !important; }
+
+.container-fluid {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  min-height: 100vh;
+  max-height: max-content;
+  background-color: #2d2d2d; }
+
+.row {
+  min-width: max-content; }
+  .row .col {
+    min-width: 272px !important;
+    max-width: 272px !important; }
+
+.card .card-header {
+  background-color: #ebecf0;
+  border-bottom: none; }
+.card .parent {
+  overflow-y: scroll;
+  min-height: 2px;
+  max-height: calc(100vh - 200px); }
+.card .card-body {
+  background-color: #ebecf0; }
+  .card .card-body .card,
+  .card .card-body .card-body {
+    background-color: #ffffff; }
+    .card .card-body .card:hover,
+    .card .card-body .card-body:hover {
+      background-color: #ebecf0;
+      cursor: pointer; }
+
+textarea {
+  resize: none; }
+  textarea:focus {
+    box-shadow: none !important; }
+  textarea::-webkit-scrollbar-track {
+    width: 0; }
+  textarea::-webkit-scrollbar {
+    width: 0; }
+  textarea::-webkit-scrollbar-thumb {
+    width: 0; }
+
+.close {
+  position: absolute;
+  float: none;
+  left: 100px;
+  font-weight: lighter;
+  font-size: 32px; }
+  .close:hover {
+    cursor: pointer; }
+
+.card-body::-webkit-scrollbar-track {
+  border-radius: 4px; }
+
+.card-body::-webkit-scrollbar {
+  width: 5px; }
+
+.card-body::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 10px;
+  background-image: -webkit-linear-gradient(90deg, rgba(0, 0, 0, 0.2) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.2) 75%, transparent 75%, transparent); }
+
+/*
+ *  STYLE 1
+ */
+.container-fluid::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5; }
+
+.container-fluid::-webkit-scrollbar {
+  height: 8px;
+  background-color: #f5f5f5; }
+
+.container-fluid::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #777779; }
+
+.active {
+  border-radius: 0;
+  color: #0c5460;
+  border-color: #bee5eb; }
+  .active .card-body {
+    background-color: #d1ecf1 !important; }
+
+.card.add-another-list {
+  border: transparent; }
+  .card.add-another-list .translucent {
+    opacity: 0.75; }
+
+#clipboard {
+  opacity: 0; }
+
+.toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px; }
+
+/*# sourceMappingURL=styles.css.map */
