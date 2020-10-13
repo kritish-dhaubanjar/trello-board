@@ -114,13 +114,14 @@ export default {
             "Curabitur congue massa ac pellentesque interdum.",
             "Morbi ac orci sed ex elementum scelerisque non eget nulla.",
             "Duis rutrum sapien at elit consequat, quis porttitor nulla venenatis.",
-            "Praesent id nisl id odio ornare auctor in eu nisi.",
           ],
         },
         {
           name: "Design",
           slug: "design",
-          childs: [],
+          childs: [
+            "Praesent id nisl id odio ornare auctor in eu nisi.",
+          ],
         },
         {
           name: "Todo",
