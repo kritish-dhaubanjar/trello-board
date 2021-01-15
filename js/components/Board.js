@@ -142,6 +142,9 @@ export default {
   created() {
     let sections = window.location.pathname.split("/");
     let slug = sections.pop();
+    // FIREBASE
+    slug = slug ? slug : "trello";
+    slug += ".json";
     fetch(this.$api + "/" + slug)
       .then((res) => res.json())
       .then((res) => {
@@ -222,6 +225,9 @@ export default {
       this.timeout = setTimeout(() => {
         let sections = window.location.pathname.split("/");
         let slug = sections.pop();
+        // FIREBASE
+        slug = slug ? slug : "trello";
+        slug += ".json";
         fetch(this.$api + "/" + slug, {
           method: "PUT",
           headers: {
