@@ -145,8 +145,11 @@ export default {
     fetch(this.$api + "/" + slug)
       .then((res) => res.json())
       .then((res) => {
-        this.types = res.board;
-        (this.name = res.name), (this.slug = res.slug);
+        if (res) {
+          this.types = res;
+          this.name = res.name;
+          this.slug = res.slug;
+        }
       })
       .then(() => {
         this.addEventListener();
@@ -306,6 +309,8 @@ export default {
 
     //discord
     discord(type, payload) {
+      return;
+
       if (this.discordTimeout) {
         clearTimeout(this.discordTimeout);
       }
